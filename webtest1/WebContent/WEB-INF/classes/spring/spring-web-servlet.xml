@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:mvc="http://www.springframework.org/schema/mvc"
+xmlns:context="http://www.springframework.org/schema/context"
+xmlns:p="http://www.springframework.org/schema/p"
+xsi:schemaLocation="   
+		http://www.springframework.org/schema/beans   
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/context   
+		http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+	<!-- 启用MVC注解 -->
+    <mvc:annotation-driven />
+    
+    <!-- HandlerMapping -->
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+    	
+    <!-- HandlerAdapter -->
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+    
+	<context:component-scan base-package="com.lujun" />
+    
+    <!-- 使用ajax,json -->
+	 <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+				</bean>
+				<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+					<property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- ViewResolver -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+		<property name="prefix" value="/"></property>  
+		<property name="suffix" value=".jsp"></property>  
+	</bean>
+	
+	<!-- 静态资源文件，不会被Spring MVC拦截 -->
+	<mvc:resources location="/resources/" mapping="/resources/**"/>
+	<mvc:resources location="/test/source/" mapping="/test/source/**"/>
+	
+	<!-- Configure the multipart resolver -->  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	   <!-- one of the properties available; the maximum file size in bytes -->  
+	   <property name="maxUploadSize" value="99999999999999"/>  
+	</bean>
+</beans>

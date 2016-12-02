@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="user">
+	<select id="loadPage" resultClass="HashMap">
+		SELECT 
+			A.USER_ID,
+			A.USER_NAME,
+			A.USER_PASS,
+			A.USER_AGE,
+			A.USER_SEX,
+			A.USER_TEL,
+			A.USER_QQ,
+			A.USER_EMAIL,
+			A.USER_ID_CARD
+		FROM 
+			USERS A
+		WHERE 1=1
+		<isNotEmpty property="criteria.strVal1" prepend="AND">
+		A.USER_NAME like '%'||#criteria.strVal1#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="criteria.strVal2" prepend="AND">
+		A.USER_QQ like '%'||#criteria.strVal2#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="criteria.strVal3" prepend="AND">
+		A.USER_EMAIL like '%'||#criteria.strVal3#||'%'
+		</isNotEmpty>
+		ORDER BY A.USER_ID ASC
+	</select>
+	
+	<select id="countAll" resultClass="Integer">
+		SELECT 
+			COUNT(1)
+		FROM 
+			USERS A
+		WHERE 1=1
+		<isNotEmpty property="criteria.strVal1" prepend="AND">
+		A.USER_NAME like '%'||#criteria.strVal1#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="criteria.strVal2" prepend="AND">
+		A.USER_QQ like '%'||#criteria.strVal2#||'%'
+		</isNotEmpty>
+		<isNotEmpty property="criteria.strVal3" prepend="AND">
+		A.USER_EMAIL like '%'||#criteria.strVal3#||'%'
+		</isNotEmpty>
+	</select>
+	
+	<select id="existsUserName" resultClass="Integer">
+		SELECT
+			COUNT(1)
+		FROM 
+			USERS
+		WHERE 1=1
+		<isNotEmpty property="criteria.strVal1" prepend="AND">
+		USER_NAME = #criteria.strVal1#
+		</isNotEmpty>
+		<isNotEmpty property="criteria.lonVal1" prepend="AND">
+		USER_ID = #criteria.lonVal1#
+		</isNotEmpty>
+	</select>
+</sqlMap>

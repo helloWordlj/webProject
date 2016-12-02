@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+xmlns:beans="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation ="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+<!--登录页面不过滤 -->
+    <http pattern="/login.jsp" security="none" />
+     
+    <http access-denied-page="/denied.jsp">
+        <form-login login-page="/login.jsp" />
+        <!--访问/admin.jsp资源的用户必须具有ROLE_ADMIN的权限 -->
+        <intercept-url pattern="/admin.jsp" access="ROLE_ADMIN" />
+        <!--访问/**资源的用户必须具有ROLE_USER的权限 -->
+        <intercept-url pattern="/**" access="ROLE_USER" />
+        <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="false" />
+        </session-management>
+    </http>
+     
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="john" password="john" authorities="ROLE_USER" />
+                <user name="admin" password="admin" authorities="ROLE_USER, ROLE_ADMIN" />
+                <user name="guest" password="guest" authorities="ROLE_GUEST" />
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+    
+</beans:beans>
