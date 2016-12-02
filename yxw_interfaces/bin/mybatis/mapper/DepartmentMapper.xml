@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxw.interfaces.entity.Department">
+
+	<resultMap id="departmentMap" type="com.yxw.interfaces.entity.Department">
+		<id column="ID" property="id" />
+		<result column="BRANCH_CODE" property="branchCode" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="DEPT_CODE" property="deptCode" />
+		<result column="DEPT_NAME" property="deptName" />
+		<result column="DEPT_TELEPHONE" property="deptTelephone" />
+		<result column="DEPT_DESCRIPTION" property="deptDescription" />
+		<result column="DEPT_LOCATION" property="deptLocation" />
+		<result column="PARENT_DEPT_CODE" property="parentDeptCode" />
+	</resultMap>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO INTERFACES_DEPARTMENT(
+			ID,
+			BRANCH_CODE,
+			BRANCH_NAME,
+			DEPT_CODE,
+			DEPT_NAME,
+			DEPT_TELEPHONE,
+			DEPT_DESCRIPTION,
+			DEPT_LOCATION,
+			PARENT_DEPT_CODE
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.id},
+			#{item.branchCode},
+			#{item.branchName},
+			#{item.deptCode},
+			#{item.deptName},
+			#{item.deptTelephone},
+			#{item.deptDescription},
+			#{item.deptLocation},
+			#{item.parentDeptCode}
+		)
+		</foreach>
+	</insert>
+	
+	<select id="findByParams" parameterType="Map" resultMap="departmentMap">
+		select * from INTERFACES_DEPARTMENT D WHERE D.DEPT_CODE=#{deptCode}
+	</select>
+	
+	<select id="findAll"  resultMap="departmentMap">
+		select * from INTERFACES_DEPARTMENT
+	</select>
+	
+	<delete id="deleteAll">
+	 DELETE FROM  INTERFACES_DEPARTMENT
+	</delete>
+</mapper>

@@ -1,0 +1,145 @@
+/**
+ * <html>
+ * <body>
+ *  <P>  Copyright(C)版权所有 - 2015 广州医享网络科技发展有限公司.</p>
+ *  <p>  All rights reserved.</p>
+ *  <p> Created on 2015年3月3日</p>
+ *  <p> Created by Administrator</p>
+ *  </body>
+ * </html>
+ */
+package com.yxw.framework.common.cache.impl;
+
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+import net.sf.ehcache.Element;
+
+import com.yxw.framework.common.cache.Cache;
+
+/**
+ * ehcache缓存实现类
+ * 
+ * @author 申午武
+ * @version 1.0
+ * @since 2015年3月3日
+ */
+public class Ehcache implements Cache {
+	private static final long serialVersionUID = -2602501248911163694L;
+	/**
+	 * 对象锁
+	 */
+	private static ConcurrentHashMap<String, Byte[]> lockObjectMap = new ConcurrentHashMap<String, Byte[]>();
+	private net.sf.ehcache.Cache cache;
+	private String cacheName;
+	private static final String split = "$cache$";
+
+	public Ehcache(String cacheName, net.sf.ehcache.Cache cache) {
+		this.cacheName = cacheName;
+		this.cache = cache;
+	}
+
+	/**
+	 * 唯一对象锁
+	 * 
+	 * @param lockStr
+	 * @return
+	 */
+	private Byte[] getLockObject(String key) {
+		if (!lockObjectMap.containsKey(key)) {
+			synchronized (true) {
+				Byte[] lockObject = lockObjectMap.get(key);
+				if (lockObject == null) {
+					lockObject = new Byte[0];
+					lockObjectMap.put(key, lockObject);
+				}
+			}
+		}
+		return lockObjectMap.get(key);
+	}
+
+	@Override
+	public Object get(String key) {
+		Byte[] lockObject = getLockObject(key);
+		Object object = null;
+		if (lockObject != null) {
+			synchronized (lockObject) {
+				object = this.cache.get(new StringBuffer(cacheName).append(split).append(key).toString());
+			}
+		}
+		return object;
+	}
+
+	@Override
+	public void put(String key, Object value) {
+		if (value != null) {
+			Byte[] lockObject = getLockObject(key);
+			synchronized (lockObject) {
+				Element element = new Element(new StringBuffer(cacheName).append(split).append(key).toString(), value);
+				this.cache.put(element);
+			}
+
+		}
+	}
+
+	@Override
+	public void put(String key, Object value, int TTL) {
+		if (value != null) {
+			Byte[] lockObject = getLockObject(key);
+			synchronized (lockObject) {
+				Element element = new Element(new StringBuffer(cacheName).append(split).append(key).toString(), value);
+				this.cache.put(element);
+			}
+		}
+	}
+
+	@Override
+	public boolean containsKey(String key) {
+		Element element = this.cache.getQuiet(new StringBuffer(cacheName).append(split).append(key).toString());
+		if (element != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public void remove(String key) {
+		Byte[] lockObject = lockObjectMap.get(key);
+		if (lockObject != null) {
+			synchronized (lockObject) {
+				this.cache.remove(new StringBuffer(cacheName).append(split).append(key).toString());
+			}
+		}
+	}
+
+	@Override
+	public synchronized void removeAll() {
+		this.cache.removeAll();
+	}
+
+	@Override
+	public synchronized List getKeys() {
+		return this.cache.getKeys();
+	}
+
+	@Override
+	public synchronized int getSize() {
+		return this.getKeys().size();
+	}
+
+	@Override
+	public synchronized String getName() {
+		return this.cacheName;
+	}
+
+	@Override
+	public long getSizeInBytes() {
+		return this.cache.calculateInMemorySize();
+	}
+
+	@Override
+	public void flush() {
+		this.cache.flush();
+	}
+}

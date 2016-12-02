@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxw.interfaces.entity.RegisterDoctor">
+
+	<resultMap id="registerDoctorMap" type="com.yxw.interfaces.entity.RegisterDoctor">
+		<id column="ID" property="id" />
+		<result column="BRANCH_CODE" property="branchCode" />
+		<result column="BRANCH_NAME" property="branchName" />
+		<result column="DEPT_CODE" property="deptCode" />
+		<result column="DEPT_NAME" property="deptName" />
+		<result column="DOCTOR_CODE" property="doctorCode" />
+		<result column="DOCTOR_NO" property="doctorNo" />
+		<result column="DOCTOR_NAME" property="doctorName" />
+		<result column="DOCTOR_SEX" property="doctorSex" />
+		<result column="DOCTOR_BIRTH" property="doctorBirth" />
+		<result column="DOCTOR_TELEPHONE" property="doctorTelephone" />
+		<result column="DOCTOR_SKILL" property="doctorSkill" />
+		<result column="DOCTOR_INTRODUTION" property="doctorIntrodution" />
+		<result column="DOCTOR_TITLE" property="doctorTitle" />
+		<result column="PICTURE" property="picture" />
+	</resultMap>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO INTERFACES_REGISTERDOCTOR(
+			ID,
+			BRANCH_CODE,
+			BRANCH_NAME,
+			DEPT_CODE,
+			DEPT_NAME,
+			DOCTOR_CODE,
+			DOCTOR_NO,
+			DOCTOR_NAME,
+			DOCTOR_SEX,
+			DOCTOR_BIRTH,
+			DOCTOR_TELEPHONE,
+			DOCTOR_SKILL,
+			DOCTOR_INTRODUTION,
+			DOCTOR_TITLE,
+			PICTURE
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.id},
+			#{item.branchCode},
+			#{item.branchName},
+			#{item.deptCode}, 
+			#{item.deptName}, 
+			#{item.doctorCode}, 
+			#{item.doctorNo},
+			#{item.doctorName}, 
+			#{item.doctorSex},
+			#{item.doctorBirth},
+			#{item.doctorTelephone},
+			#{item.doctorSkill},
+			#{item.doctorIntrodution},
+			#{item.doctorTitle},
+			#{item.picture}
+		)
+		</foreach>
+	</insert>
+	
+	<select id="findByParams" parameterType="Map" resultMap="registerDoctorMap">
+		select * from INTERFACES_REGISTERDOCTOR D WHERE D.DEPT_CODE=#{deptCode} AND D.DOCTOR_CODE=#{doctorCode}
+	</select>
+	
+	<select id="findAll"  resultMap="registerDoctorMap">
+		select * from INTERFACES_REGISTERDOCTOR
+	</select>
+	
+	<delete id="deleteAll">
+	 	DELETE FROM  INTERFACES_REGISTERDOCTOR
+	</delete>
+</mapper>

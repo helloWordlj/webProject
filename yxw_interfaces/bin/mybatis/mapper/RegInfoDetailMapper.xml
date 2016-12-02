@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxw.interfaces.entity.RegInfoDetail">
+
+	<resultMap id="regInfoDetailMap" type="com.yxw.interfaces.entity.RegInfoDetail">
+		<id column="ID" property="id" />
+		<result column="REG_DATE" property="regDate" />
+		<result column="BRANCH_CODE" property="branchCode" />
+		<result column="DEPT_CODE" property="deptCode" />
+		<result column="DOCTOR_CODE" property="doctorCode" />
+		<result column="TIME_FLAG" property="timeFlag" />
+		<result column="HAS_DETAIL_TIME" property="hasDetailTime" />
+		<result column="BEGIN_TIME" property="beginTime" />
+		<result column="END_TIME" property="endTime" />
+		<result column="WORK_STATUS" property="workStatus" />
+		<result column="TOTAL_NUM" property="totalNum" />
+		<result column="LEFT_NUM" property="leftNum" />
+		<result column="REG_FEE" property="regFee" />
+		<result column="TREAT_FEE" property="treatFee" />
+		<result column="WORK_ID" property="workId" />
+	</resultMap>
+
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO INTERFACES_REGINFODETAIL(
+			ID,
+			REG_DATE,
+			BRANCH_CODE,
+			DEPT_CODE,
+			DOCTOR_CODE,
+			TIME_FLAG,
+			HAS_DETAIL_TIME,
+			BEGIN_TIME,
+			END_TIME,
+			WORK_STATUS,
+			TOTAL_NUM,
+			LEFT_NUM,
+			REG_FEE,
+			TREAT_FEE,
+			WORK_ID
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.id},
+			#{item.regDate},
+			#{item.branchCode},
+			#{item.deptCode},
+			#{item.doctorCode},
+			#{item.timeFlag},
+			#{item.hasDetailTime},
+			#{item.beginTime}, 
+			#{item.endTime}, 
+			#{item.workStatus},
+			#{item.totalNum}, 
+			#{item.leftNum},
+			#{item.regFee}, 
+			#{item.treatFee},
+			#{item.workId}
+		)
+		</foreach>
+	</insert>
+	
+	<select id="findByParams" parameterType="Map" resultMap="regInfoDetailMap">
+		select * from INTERFACES_REGINFODETAIL D WHERE D.REG_DATE=#{regDate} AND D.BRANCH_CODE=#{branchCode} AND D.DEPT_CODE=#{deptCode} AND D.DOCTOR_CODE=#{doctorCode} AND D.TIME_FLAG=#{timeFlag}
+	</select>
+	
+	<select id="count" parameterType="Map" resultType="java.lang.Long">
+		SELECT COUNT(1) FROM INTERFACES_REGINFODETAIL
+	</select>
+	
+	<select id="countByDelete" parameterType="Map" resultType="java.lang.Long">
+		SELECT COUNT(1) FROM INTERFACES_REGINFODETAIL WHERE UNIX_TIMESTAMP()-UNIX_TIMESTAMP(REG_DATE)>86400
+	</select>
+	
+	<select id="findAll"  resultMap="regInfoDetailMap">
+		select * from INTERFACES_REGINFODETAIL
+	</select>
+	
+	<select id="findListByPage" resultMap="regInfoDetailMap" parameterType="Map" >
+			SELECT * FROM INTERFACES_REGINFODETAIL
+	</select>
+	
+	<select id="findListByPageDelete" resultMap="regInfoDetailMap" parameterType="Map" >
+			SELECT * FROM INTERFACES_REGINFODETAIL WHERE UNIX_TIMESTAMP()-UNIX_TIMESTAMP(REG_DATE)>86400
+	</select>
+	
+	<delete id="deleteByParams">
+	 	DELETE FROM  INTERFACES_REGINFODETAIL WHERE REG_DATE=#{regDate} AND BRANCH_CODE=#{branchCode} AND DEPT_CODE=#{deptCode}
+	</delete>
+	
+	<delete id="batchDelete" parameterType="java.util.List">
+		DELETE FROM  INTERFACES_REGINFODETAIL WHERE ID IN(
+		<foreach collection="list" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+</mapper>

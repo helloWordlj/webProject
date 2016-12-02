@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxw.interfaces.entity.FriedAndDelivery">
+
+	<resultMap id="friedAndDeliveryMap" type="com.yxw.interfaces.entity.FriedAndDelivery">
+		<id column="ID" property="id" />
+		<result column="BRANCH_CODE" property="branchCode" />
+		<result column="MZ_FEE_ID" property="mzFeeId" />
+		<result column="RECIPE_ID" property="recipeId" />
+		<result column="FRIED" property="fried" />
+		<result column="DELIVERED" property="delivered" />
+		<result column="PROVINCE" property="province" />
+		<result column="CITY" property="city" />
+		<result column="COUNTY" property="county" />
+		<result column="ADDRESS" property="address" />
+		<result column="POSTCODE" property="postcode" />
+		<result column="CONTACTS" property="contacts" />
+		<result column="MOBILE" property="mobile" />
+		<result column="TELEPHONE" property="telephone" />
+		<result column="CREATE_TIME" property="createTime" />
+	</resultMap>
+
+	<insert id="add" parameterType="java.util.List">
+		INSERT INTO INTERFACES_FRIED_DELIVERY(
+			ID,
+			BRANCH_CODE,
+			MZ_FEE_ID,
+			RECIPE_ID,
+			FRIED,
+			DELIVERED,
+			PROVINCE,
+			CITY,
+			COUNTY,
+			ADDRESS,
+			POSTCODE,
+			CONTACTS,
+			MOBILE,
+			TELEPHONE,
+			CREATE_TIME
+		)
+		VALUES
+		(
+			#{id},
+			#{branchCode},
+			#{mzFeeId},
+			#{recipeId},
+			#{fried},
+			#{delivered},
+			#{province},
+			#{city},
+			#{county},
+			#{address},
+			#{postcode},
+			#{contacts},
+			#{mobile},
+			#{telephone},
+			#{createTime}
+		)
+	</insert>
+	
+	<update id="update" parameterType="com.yxw.interfaces.entity.MedicalCard">
+		UPDATE INTERFACES_FRIED_DELIVERY SET
+			ID=#{id},
+			BRANCH_CODE=#{branchCode},
+			MZ_FEE_ID=#{mzFeeId},
+			RECIPE_ID=#{recipeId},
+			FRIED=#{fried},
+			DELIVERED=#{delivered},
+			PROVINCE=#{province},
+			CITY=#{city},
+			COUNTY=#{county},
+			ADDRESS=#{address},
+			POSTCODE=#{postcode},
+			CONTACTS=#{contacts},
+			MOBILE=#{mobile},
+			TELEPHONE=#{telephone},
+			CREATE_TIME=#{createTime}
+			
+		WHERE ID=#{id}
+	</update>
+	
+	<select id="findByParams" parameterType="Map" resultMap="friedAndDeliveryMap">
+		select * from INTERFACES_FRIED_DELIVERY WHERE MZ_FEE_ID=#{mzFeeId} AND RECIPE_ID=#{recipeId}
+	</select>
+	
+	<select id="findAll" resultMap="friedAndDeliveryMap">
+		select * from INTERFACES_FRIED_DELIVERY
+	</select>
+	
+	<select id="findListByDelete" resultMap="friedAndDeliveryMap">
+		SELECT * FROM INTERFACES_FRIED_DELIVERY WHERE UNIX_TIMESTAMP()-UNIX_TIMESTAMP(CREATE_TIME)>86400
+	</select>
+	
+	<delete id="batchDelete" parameterType="java.util.List">
+		DELETE FROM  INTERFACES_FRIED_DELIVERY WHERE ID IN(
+		<foreach collection="list" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+	
+</mapper>

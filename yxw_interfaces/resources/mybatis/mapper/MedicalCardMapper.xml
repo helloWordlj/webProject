@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxw.interfaces.entity.MedicalCard">
+
+	<resultMap id="medicalCardMap" type="com.yxw.interfaces.entity.MedicalCard">
+		<id column="ID" property="id" />
+		<result column="PAT_ID" property="patId" />
+		<result column="PAT_TYPE" property="patType" />
+		<result column="PAT_NAME" property="patName" />
+		<result column="PAT_SEX" property="patSex" />
+		<result column="PAT_BIRTH" property="patBirth" />
+		<result column="PAT_ADDRESS" property="patAddress" />
+		<result column="PAT_MOBILE" property="patMobile" />
+		<result column="PAT_CARD_TYPE" property="patCardType" />
+		<result column="PAT_CARD_NO" property="patCardNo" />
+		<result column="PAT_ID_TYPE" property="patIdType" />
+		<result column="PAT_ID_NO" property="patIdNo" />
+		<result column="GUARD_NAME" property="guardName" />
+		<result column="GUARD_ID_TYPE" property="guardIdType" />
+		<result column="GUARD_ID_NO" property="guardIdNo" />
+		<result column="GUARD_MOBILE" property="guardMobile" />
+		<result column="GUARD_ADDRESS" property="guardAddress" />
+	</resultMap>
+
+	<insert id="add" parameterType="com.yxw.interfaces.entity.MedicalCard">
+		INSERT INTO INTERFACES_MEDICALCARD(
+			ID,
+			PAT_ID,
+			PAT_TYPE,
+			PAT_NAME,
+			PAT_SEX,
+			PAT_BIRTH,
+			PAT_ADDRESS,
+			PAT_MOBILE,
+			PAT_CARD_TYPE,
+			PAT_CARD_NO,
+			PAT_ID_TYPE,
+			PAT_ID_NO,
+			GUARD_NAME,
+			GUARD_ID_TYPE,
+			GUARD_ID_NO,
+			GUARD_MOBILE,
+			GUARD_ADDRESS
+		)
+		VALUES
+		(
+			#{id},
+			#{patId},
+			#{patType},
+			#{patName}, 
+			#{patSex}, 
+			#{patBirth}, 
+			#{patAddress},
+			#{patMobile}, 
+			#{patCardType},
+			#{patCardNo},
+			#{patIdType},
+			#{patIdNo},
+			#{guardName},
+			#{guardIdType},
+			#{guardIdNo},
+			#{guardMobile},
+			#{guardAddress}
+		);
+	</insert>
+	
+	<update id="update" parameterType="com.yxw.interfaces.entity.MedicalCard">
+		UPDATE INTERFACES_MEDICALCARD D SET
+			D.PAT_ID=#{patId},
+			D.PAT_TYPE=#{patType},
+			D.PAT_NAME=#{patName}, 
+			D.PAT_SEX=#{patSex}, 
+			D.PAT_BIRTH=#{patBirth}, 
+			D.PAT_ADDRESS=#{patAddress},
+			D.PAT_MOBILE=#{patMobile}, 
+			D.PAT_CARD_TYPE=#{patCardType},
+			D.PAT_CARD_NO=#{patCardNo},
+			D.PAT_ID_TYPE=#{patIdType},
+			D.PAT_ID_NO=#{patIdNo},
+			D.GUARD_NAME=#{guardName},
+			D.GUARD_ID_TYPE=#{guardIdType},
+			D.GUARD_ID_NO=#{guardIdNo},
+			D.GUARD_MOBILE=#{guardMobile},
+			D.GUARD_ADDRESS=#{guardAddress}
+			
+		WHERE D.PAT_CARD_NO=#{patCardNo} AND D.PAT_CARD_TYPE=#{patCardType}
+	</update>
+	
+	<select id="findByParams" parameterType="Map" resultMap="medicalCardMap">
+		select * from INTERFACES_MEDICALCARD D WHERE D.PAT_CARD_NO=#{patCardNo} AND D.PAT_CARD_TYPE=#{patCardType}
+	</select>
+	
+	<select id="findAll"  resultMap="medicalCardMap">
+		select * from INTERFACES_MEDICALCARD
+	</select>
+	
+	<delete id="deleteAll">
+	 	DELETE FROM  INTERFACES_MEDICALCARD
+	</delete>
+	<select id="count" parameterType="Map" resultType="java.lang.Long">
+		SELECT COUNT(1) FROM INTERFACES_MEDICALCARD
+	</select>
+	<select id="findListByPage" resultMap="medicalCardMap" parameterType="Map" >
+			SELECT * FROM INTERFACES_MEDICALCARD
+	</select>
+</mapper>

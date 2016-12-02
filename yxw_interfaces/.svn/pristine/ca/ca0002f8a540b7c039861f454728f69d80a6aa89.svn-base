@@ -1,0 +1,12 @@
+#logback config
+logback.home=./yxlog
+logback.appName=yx129
+
+#包含所有的日志信息
+logback.allFileName=yx129_all
+#接口info等级的日志文件
+logback.infoFileName=yx129_info
+#接口err等级的日志文件
+logback.errFileName=yx129_err
+#重要日志文件
+logback.importanceFileName=yx129_importance
